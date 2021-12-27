@@ -11,6 +11,7 @@ import { Entities, IntegrationSteps, Relationships } from '../constants';
 import {
   createOrganizationEntity,
   createOrganizationMemberEntity,
+  createOrganizationWorkspaceEntity,
 } from './converters';
 import {
   CachedOrganizationData,
@@ -113,6 +114,40 @@ export async function fetchOrganizationMembers({
   );
 }
 
+export async function fetchOrganizationWorkspaces({
+  instance: { config },
+  jobState,
+}: IntegrationStepExecutionContext<IntegrationConfig>) {
+  const { apiKey } = config;
+  const client = new TerraformCloudClient({ apiKey });
+
+  await forEachOrganization(
+    jobState,
+    async ({ organizationExternalId, organizationName }) => {
+      await client.organizations.iterateOrganizationWorkspaces(
+        organizationName,
+        async ({ item }) => {
+          const workspaceEntity = createOrganizationWorkspaceEntity(
+            item.id,
+            item.attributes,
+          );
+          await jobState.addEntity(workspaceEntity);
+
+          await jobState.addRelationship(
+            createDirectRelationship({
+              _class: RelationshipClass.HAS,
+              fromKey: organizationExternalId,
+              toKey: workspaceEntity._key,
+              fromType: Entities.ORGANIZATION._type,
+              toType: Entities.WORKSPACE._type,
+            }),
+          );
+        },
+      );
+    },
+  );
+}
+
 // export async function fetchOrganizationOAuthTokens({
 //   instance: { config },
 //   jobState,
@@ -147,6 +182,14 @@ export const organizationSteps: IntegrationStep<IntegrationConfig>[] = [
     relationships: [Relationships.ORGANIZATION_HAS_USER],
     dependsOn: [IntegrationSteps.ORGANIZATIONS],
     executionHandler: fetchOrganizationMembers,
+  },
+  {
+    id: IntegrationSteps.ORGANIZATION_WORKSPACES,
+    name: 'Fetch Organization Workspaces',
+    entities: [Entities.WORKSPACE],
+    relationships: [Relationships.ORGANIZATION_HAS_WORKSPACE],
+    dependsOn: [IntegrationSteps.ORGANIZATIONS],
+    executionHandler: fetchOrganizationWorkspaces,
   },
   // {
   //   id: IntegrationSteps.ORGANIZATION_OAUTH_TOKENS,

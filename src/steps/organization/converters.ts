@@ -2,7 +2,7 @@ import {
   createIntegrationEntity,
   parseTimePropertyValue,
 } from '@jupiterone/integration-sdk-core';
-import { Organization } from '../../tfe/types';
+import { Organization, OrganizationWorkspace } from '../../tfe/types';
 import { User } from '../../tfe/types';
 import { prefixObjProperties } from '../../util/properties';
 import { Entities } from '../constants';
@@ -63,6 +63,63 @@ export function createOrganizationMemberEntity({
         email: userData.email,
         ...(userData.permissions &&
           prefixObjProperties('permissions', userData.permissions)),
+      },
+    },
+  });
+}
+
+export function createOrganizationWorkspaceEntity(
+  workspaceId: string,
+  data: OrganizationWorkspace,
+) {
+  return createIntegrationEntity({
+    entityData: {
+      source: data,
+      assign: {
+        _key: workspaceId,
+        _class: Entities.WORKSPACE._class,
+        _type: Entities.WORKSPACE._type,
+        actionsIsDestroyable: data.actions?.isDestroyable,
+        allowDestroyPlan: data.allowDestroyPlan,
+        applyDurationAverage: data.applyDurationAverage,
+        autoApply: data.autoApply,
+        autoDestroyAt: data.autoDestroyAt,
+        createdAt: data.createdAt,
+        executionMode: data.executionMode,
+        description: data.description || '',
+        environment: data.environment,
+        fileTriggersEnabled: data.fileTriggersEnabled,
+        globalRemoteState: data.globalRemoteState,
+        latestChangeAt: data.latestChangeAt,
+        locked: data.locked,
+        name: data.name,
+        operations: data.operations,
+        planDurationAverage: data.planDurationAverage,
+        policyCheckFailures: data.policyCheckFailures,
+        queueAllRuns: data.queueAllRuns,
+        resourceCount: data.resourceCount,
+        runFailures: data.runFailures,
+        source: data.source,
+        sourceName: data.sourceName,
+        sourceUrl: data.sourceUrl,
+        speculativeEnabled: data.speculativeEnabled,
+        structuredRunOutputEnabled: data.structuredRunOutputEnabled,
+        terraformVersion: data.terraformVersion,
+        triggerPrefixes: data.triggerPrefixes,
+        updatedAt: data.updatedAt,
+        vcsRepoBranch: data.vcsRepo?.branch,
+        vcsRepoDisplayIndentifier: data.vcsRepo?.displayIdentifier,
+        vcsRepoIngressSubmodules: data.vcsRepo?.ingressSubmodules,
+        vcsRepoOauthTokenId: data.vcsRepo?.oauthTokenId,
+        vcsRepoRepositoryHttpUrl: data.vcsRepo?.repositoryHttpUrl,
+        vcsRepoServiceProvider: data.vcsRepo?.serviceProvider,
+        vcsRepoWebhookUrl: data.vcsRepo?.webhookUrl,
+        vcsRepoIdentifier: data.vcsRepoIdentifier,
+        workingDirectory: data.workingDirectory,
+        workspaceKpisRunsCount: data.workspaceKpisRunsCount,
+        webLink: `https://app.terraform.io/app/${data.name}/workspaces`,
+        ...(data.permissions &&
+          prefixObjProperties('permissions', data.permissions)),
       },
     },
   });
