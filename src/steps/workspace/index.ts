@@ -3,11 +3,14 @@ import {
   IntegrationStep,
   IntegrationStepExecutionContext,
   RelationshipClass,
+  createMappedRelationship,
+  RelationshipDirection,
 } from '@jupiterone/integration-sdk-core';
 import { TerraformCloudClient } from '../../tfe/client';
 import { IntegrationConfig } from '../../config';
 import { Entities, IntegrationSteps, Relationships } from '../constants';
 import { createWorkspaceResourceEntity } from './converters';
+import { cloudResourceMapping } from '../../util/cloudResourceMapping';
 
 export async function fetchWorkspaceResources({
   instance: { config },
@@ -37,6 +40,25 @@ export async function fetchWorkspaceResources({
               toType: Entities.WORKSPACE_RESOURCE._type,
             }),
           );
+
+          const { providerType, name, _key } = resourceEntity;
+          if (cloudResourceMapping.includes(providerType)) {
+            await jobState.addRelationship(
+              createMappedRelationship({
+                _class: RelationshipClass.IS,
+                _type: `tfe_workspace_resource_is_${providerType}`,
+                _mapping: {
+                  sourceEntityKey: _key,
+                  targetFilterKeys: ['_type', 'name'],
+                  relationshipDirection: RelationshipDirection.FORWARD,
+                  targetEntity: {
+                    _type: providerType,
+                    name: name,
+                  },
+                },
+              }),
+            );
+          }
         },
       );
     },
