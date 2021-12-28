@@ -17,7 +17,7 @@ export async function fetchWorkspaceResources({
   const client = new TerraformCloudClient({ apiKey });
 
   await jobState.iterateEntities(
-    { _type: 'tfe_workspace' },
+    { _type: Entities.WORKSPACE._type },
     async (workspaceEntity) => {
       await client.workspaces.iterateWorkspaceResources(
         workspaceEntity._key as string,
