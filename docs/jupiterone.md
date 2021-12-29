@@ -8,7 +8,7 @@
 
 ## How it Works
 
-- JupiterOne periodically fetches services, teams, and users from Terraform Cloud
+- JupiterOne periodically fetches organizations, users, workspaces, and workspace resources from Terraform Cloud
   to update the graph.
 - Write JupiterOne queries to review and monitor updates to the graph.
 - Configure alerts to take action when JupiterOne graph changes.
@@ -27,10 +27,8 @@ If you need help with this integration, please contact
 
 ### In Terraform Cloud
 
-TODO: List specific actions that must be taken in the provider. Remove this
-section when there are no actions to take in the provider.
-
-1. [Generate a REST API key](https://example.com/docs/generating-api-keys)
+1. Create a Terraform Cloud account.
+2. [Generate a Terraform Cloud authentication token](https://www.terraform.io/cloud-docs/api-docs#authentication).
 
 ### In JupiterOne
 
@@ -44,7 +42,7 @@ section when there are no actions to take in the provider.
    the integration instance.
 6. Select a **Polling Interval** that you feel is sufficient for your monitoring
    needs. You may leave this as `DISABLED` and manually execute the integration.
-7. Enter the **Terraform Cloud API Key** generated for use by JupiterOne.
+7. Enter the **Terraform Cloud Authentication Token** generated for use by JupiterOne.
 8. Click **Create Configuration** once all values are provided.
 
 # How to Uninstall
