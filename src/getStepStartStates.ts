@@ -4,27 +4,34 @@ import {
 } from '@jupiterone/integration-sdk-core';
 import { IntegrationConfig } from './config';
 import { IntegrationSteps } from './steps/constants';
+import { TerraformCloudClient } from './tfe/client';
 
-export default function getStepStartStates(
+export default async function getStepStartStates(
   context: IntegrationExecutionContext<IntegrationConfig>,
-): StepStartStates {
-  const { logger } = context;
-  const isOwner = context.instance.config.organizationOwner === 'TRUE';
+): Promise<StepStartStates> {
+  const { logger, instance } = context;
+  const client = new TerraformCloudClient({ apiKey: instance.config.apiKey });
+
+  const entitlementSet =
+    await client.organizations.iterateOrganizationEntitlementSet(
+      instance.config.organizationName,
+    );
+
+  // if teams are not enabled, all users are owners
+  const enableAll = !entitlementSet.teams;
 
   const stepStartStates: StepStartStates = {
     [IntegrationSteps.ORGANIZATIONS]: {
-      disabled: !isOwner,
+      disabled: !enableAll,
     },
     [IntegrationSteps.ORGANIZATION_MEMBERS]: {
-      disabled: !isOwner,
+      disabled: !enableAll,
     },
-    // Viewing a workspace (individually or in a list) requires permission to read runs.[1]
     [IntegrationSteps.ORGANIZATION_WORKSPACES]: {
-      disabled: !isOwner,
+      disabled: !enableAll,
     },
-    // To list resources the user must have permission to read resources for the specified workspace.[2]
     [IntegrationSteps.WORKSPACE_RESOURCES]: {
-      disabled: !isOwner,
+      disabled: !enableAll,
     },
   };
 
@@ -34,6 +41,3 @@ export default function getStepStartStates(
   );
   return stepStartStates;
 }
-
-// 1: https://www.terraform.io/cloud-docs/api-docs/workspaces#workspaces-api
-// 2: https://www.terraform.io/cloud-docs/api-docs/workspace-resources#permissions

@@ -4,6 +4,7 @@ import {
 } from './request';
 import {
   CreateOrganizationRequestBodyAttributes,
+  EntitlementSet,
   Organization,
   OrganizationMembership,
   OrganizationWorkspace,
@@ -124,5 +125,12 @@ export class Organizations extends TerraformCloudClientRequestor {
       },
       callback,
     );
+  }
+
+  async iterateOrganizationEntitlementSet(organizationName: string) {
+    return this.request<EntitlementSet>({
+      method: 'GET',
+      path: `/api/v2/organizations/${organizationName}/entitlement-set`,
+    });
   }
 }

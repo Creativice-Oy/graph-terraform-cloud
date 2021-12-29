@@ -11,14 +11,14 @@ export const instanceConfigFields: IntegrationInstanceConfigFieldMap = {
   apiKey: {
     type: 'string',
   },
-  organizationOwner: {
+  organizationName: {
     type: 'string',
   },
 };
 
 export interface IntegrationConfig extends IntegrationInstanceConfig {
   apiKey: string;
-  organizationOwner: string;
+  organizationName: string;
 }
 
 export async function validateInvocation(
@@ -27,13 +27,9 @@ export async function validateInvocation(
   const { instance } = context;
   const { config } = instance;
 
-  if (!config.apiKey) {
-    throw new IntegrationValidationError('Config requires all of {apiKey}');
-  }
-
-  if (!config.organizationOwner) {
+  if (!(config.apiKey && config.organizationName)) {
     throw new IntegrationValidationError(
-      "Please indicate if you're an organization owner.",
+      'Config requires all of {apiKey, organizationName}',
     );
   }
 
