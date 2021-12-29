@@ -17,15 +17,15 @@ export default async function getStepStartStates(
       instance.config.organizationName,
     );
 
-  // if teams are not enabled, all users are owners
+  // If team management is not enabled, all users are owners
   const enableAll = !entitlementSet.teams;
 
   const stepStartStates: StepStartStates = {
     [IntegrationSteps.ORGANIZATIONS]: {
-      disabled: !enableAll,
+      disabled: false,
     },
     [IntegrationSteps.ORGANIZATION_MEMBERS]: {
-      disabled: !enableAll,
+      disabled: false,
     },
     [IntegrationSteps.ORGANIZATION_WORKSPACES]: {
       disabled: !enableAll,
