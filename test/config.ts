@@ -10,5 +10,4 @@ if (process.env.LOAD_ENV) {
 
 export const integrationConfig: IntegrationConfig = {
   apiKey: process.env.API_KEY || 'fake-tfe-api-key',
-  organizationOwner: process.env.ORGANIZATION_OWNER || 'TRUE',
 };
