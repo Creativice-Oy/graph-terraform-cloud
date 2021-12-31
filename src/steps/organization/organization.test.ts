@@ -1,6 +1,8 @@
 import {
+  fetchOrganizationEntitlementSet,
   fetchOrganizationMembers,
   fetchOrganizations,
+  fetchOrganizationTeams,
   fetchOrganizationWorkspaces,
 } from '.';
 import { createDataCollectionTest } from '../../../test/recording';
@@ -264,6 +266,177 @@ describe('#fetchOrganizationWorkspaces', () => {
               properties: {
                 _class: { const: RelationshipClass.HAS },
                 _type: { const: 'tfe_organization_has_workspace' },
+              },
+            },
+          },
+        },
+      ],
+    });
+  });
+});
+
+describe('#fetchOrganizationEntitlementSet', () => {
+  test('should collect data', async () => {
+    const context = createMockStepExecutionContext<IntegrationConfig>({
+      instanceConfig: integrationConfig,
+    });
+
+    await cacheOrganizationData(context.jobState, [
+      // {
+      //   organizationName: 'austin-test-org',
+      //   organizationExternalId: 'org-Ljx2Ap3vszNhHWWv',
+      // },
+      // {
+      //   organizationName: 'austin-test-org-v2',
+      //   organizationExternalId: 'org-X2NET8eXZP36vxN7',
+      // },
+      {
+        organizationName: 'jupiterone',
+        organizationExternalId: 'org-yMai1ZUhS39WMAU9',
+      },
+      {
+        organizationName: 'j1-test-org',
+        organizationExternalId: 'org-qcDVXfQDYmRkaSDr',
+      },
+    ]);
+
+    await createDataCollectionTest({
+      context,
+      recordingName: 'fetchOrganizationEntitlementSet',
+      recordingDirectory: __dirname,
+      integrationConfig,
+      stepFunctions: [fetchOrganizationEntitlementSet],
+      entitySchemaMatchers: [
+        {
+          _type: Entities.ENTITLEMENT_SET._type,
+          matcher: {
+            _class: ['Entity'],
+            schema: {
+              additionalProperties: false,
+              properties: {
+                _type: { const: 'tfe_entitlement_set' },
+                _rawData: {
+                  type: 'array',
+                  items: { type: 'object' },
+                },
+                name: { type: 'string' },
+                costEstimation: { type: 'boolean' },
+                configurationDesigner: { type: 'boolean' },
+                operations: { type: 'boolean' },
+                privateModuleRegistry: { type: 'boolean' },
+                sentinel: { type: 'boolean' },
+                stateStorage: { type: 'boolean' },
+                teams: { type: 'boolean' },
+                vcsIntegrations: { type: 'boolean' },
+                usageReporting: { type: 'boolean' },
+                userLimit: { type: ['number', 'null'] },
+                selfServeBilling: { type: 'boolean' },
+                auditLogging: { type: 'boolean' },
+                agents: { type: 'boolean' },
+                sso: { type: 'boolean' },
+              },
+            },
+          },
+        },
+      ],
+      relationshipSchemaMatchers: [
+        {
+          _type: Relationships.ORGANIZATION_HAS_ENTITLEMENT_SET._type,
+          matcher: {
+            schema: {
+              properties: {
+                _class: { const: RelationshipClass.HAS },
+                _type: { const: 'tfe_organization_has_entitlement_set' },
+              },
+            },
+          },
+        },
+      ],
+    });
+  });
+});
+
+describe('#fetchOrganizationTeams', () => {
+  test('should collect data', async () => {
+    const context = createMockStepExecutionContext<IntegrationConfig>({
+      instanceConfig: integrationConfig,
+    });
+
+    await cacheOrganizationData(context.jobState, [
+      // {
+      //   organizationName: 'austin-test-org',
+      //   organizationExternalId: 'org-Ljx2Ap3vszNhHWWv',
+      // },
+      // {
+      //   organizationName: 'austin-test-org-v2',
+      //   organizationExternalId: 'org-X2NET8eXZP36vxN7',
+      // },
+      {
+        organizationName: 'jupiterone',
+        organizationExternalId: 'org-yMai1ZUhS39WMAU9',
+      },
+      {
+        organizationName: 'j1-test-org',
+        organizationExternalId: 'org-qcDVXfQDYmRkaSDr',
+      },
+    ]);
+
+    await createDataCollectionTest({
+      context,
+      recordingName: 'fetchOrganizationTeams',
+      recordingDirectory: __dirname,
+      integrationConfig,
+      stepFunctions: [fetchOrganizationTeams],
+      entitySchemaMatchers: [
+        {
+          _type: Entities.TEAM._type,
+          matcher: {
+            _class: ['Team'],
+            schema: {
+              additionalProperties: false,
+              properties: {
+                _type: { const: 'tfe_team' },
+                _rawData: {
+                  type: 'array',
+                  items: { type: 'object' },
+                },
+                name: { type: 'string' },
+                usersCount: { type: 'number' },
+                visibility: { type: 'string' },
+                organizationAccessManagePolicies: { type: ['boolean', 'null'] },
+                organizationAccessManagePolicyOverrides: {
+                  type: ['boolean', 'null'],
+                },
+                organizationAccessManageWorkspaces: {
+                  type: ['boolean', 'null'],
+                },
+                organizationAccessManageVcsSettigs: {
+                  type: ['boolean', 'null'],
+                },
+                'permissions.canUpdateMembership': {
+                  type: ['boolean', 'null'],
+                },
+                'permissions.canDestroy': { type: ['boolean', 'null'] },
+                'permissions.canUpdateOrganizationAccess': {
+                  type: ['boolean', 'null'],
+                },
+                'permissions.canUpdateApiToken': { type: ['boolean', 'null'] },
+                'permissions.canUpdateVisibility': {
+                  type: ['boolean', 'null'],
+                },
+              },
+            },
+          },
+        },
+      ],
+      relationshipSchemaMatchers: [
+        {
+          _type: Relationships.ORGANIZATION_HAS_TEAM._type,
+          matcher: {
+            schema: {
+              properties: {
+                _class: { const: RelationshipClass.HAS },
+                _type: { const: 'tfe_organization_has_team' },
               },
             },
           },

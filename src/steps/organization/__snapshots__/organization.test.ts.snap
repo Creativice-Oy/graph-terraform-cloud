@@ -1,5 +1,126 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`#fetchOrganizationEntitlementSet should collect data: jobState 1`] = `
+Object {
+  "collectedEntities": Array [
+    Object {
+      "_class": Array [
+        "Entity",
+      ],
+      "_key": "entitlement-set-jupiterone",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "agents": false,
+            "auditLogging": false,
+            "configurationDesigner": true,
+            "costEstimation": false,
+            "operations": true,
+            "privateModuleRegistry": true,
+            "selfServeBilling": true,
+            "sentinel": false,
+            "sso": false,
+            "stateStorage": true,
+            "teams": false,
+            "usageReporting": false,
+            "userLimit": 5,
+            "vcsIntegrations": true,
+          },
+        },
+      ],
+      "_type": "tfe_entitlement_set",
+      "agents": false,
+      "auditLogging": false,
+      "configurationDesigner": true,
+      "costEstimation": false,
+      "createdOn": undefined,
+      "displayName": "entitlement-set-jupiterone",
+      "name": "entitlement-set-jupiterone",
+      "operations": true,
+      "privateModuleRegistry": true,
+      "selfServeBilling": true,
+      "sentinel": false,
+      "sso": false,
+      "stateStorage": true,
+      "teams": false,
+      "usageReporting": false,
+      "userLimit": 5,
+      "vcsIntegrations": true,
+    },
+    Object {
+      "_class": Array [
+        "Entity",
+      ],
+      "_key": "entitlement-set-j1-test-org",
+      "_rawData": Array [
+        Object {
+          "name": "default",
+          "rawData": Object {
+            "agents": false,
+            "auditLogging": false,
+            "configurationDesigner": true,
+            "costEstimation": true,
+            "operations": true,
+            "privateModuleRegistry": true,
+            "selfServeBilling": true,
+            "sentinel": true,
+            "sso": false,
+            "stateStorage": true,
+            "teams": true,
+            "usageReporting": false,
+            "userLimit": null,
+            "vcsIntegrations": true,
+          },
+        },
+      ],
+      "_type": "tfe_entitlement_set",
+      "agents": false,
+      "auditLogging": false,
+      "configurationDesigner": true,
+      "costEstimation": true,
+      "createdOn": undefined,
+      "displayName": "entitlement-set-j1-test-org",
+      "name": "entitlement-set-j1-test-org",
+      "operations": true,
+      "privateModuleRegistry": true,
+      "selfServeBilling": true,
+      "sentinel": true,
+      "sso": false,
+      "stateStorage": true,
+      "teams": true,
+      "usageReporting": false,
+      "userLimit": null,
+      "vcsIntegrations": true,
+    },
+  ],
+  "collectedRelationships": Array [
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "org-yMai1ZUhS39WMAU9",
+      "_key": "org-yMai1ZUhS39WMAU9|has|entitlement-set-jupiterone",
+      "_toEntityKey": "entitlement-set-jupiterone",
+      "_type": "tfe_organization_has_entitlement_set",
+      "displayName": "HAS",
+    },
+    Object {
+      "_class": "HAS",
+      "_fromEntityKey": "org-qcDVXfQDYmRkaSDr",
+      "_key": "org-qcDVXfQDYmRkaSDr|has|entitlement-set-j1-test-org",
+      "_toEntityKey": "entitlement-set-j1-test-org",
+      "_type": "tfe_organization_has_entitlement_set",
+      "displayName": "HAS",
+    },
+  ],
+  "encounteredTypes": Array [
+    "tfe_entitlement_set",
+    "tfe_organization_has_entitlement_set",
+  ],
+  "numCollectedEntities": 2,
+  "numCollectedRelationships": 2,
+}
+`;
+
 exports[`#fetchOrganizationMembers should collect data: jobState 1`] = `
 Object {
   "collectedEntities": Array [
@@ -234,6 +355,16 @@ Object {
   ],
   "numCollectedEntities": 4,
   "numCollectedRelationships": 6,
+}
+`;
+
+exports[`#fetchOrganizationTeams should collect data: jobState 1`] = `
+Object {
+  "collectedEntities": Array [],
+  "collectedRelationships": Array [],
+  "encounteredTypes": Array [],
+  "numCollectedEntities": 0,
+  "numCollectedRelationships": 0,
 }
 `;
 

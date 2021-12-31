@@ -151,3 +151,37 @@ export interface WorkspaceResource {
   providerType: string;
   modifiedByStateVersionId: string;
 }
+export interface EntitlementSet {
+  costEstimation: boolean;
+  configurationDesigner: boolean;
+  operations: boolean;
+  privateModuleRegistry: boolean;
+  sentinel: boolean;
+  stateStorage: boolean;
+  teams: boolean;
+  vcsIntegrations: boolean;
+  usageReporting: boolean;
+  userLimit: number | null;
+  selfServeBilling: boolean;
+  auditLogging: boolean;
+  agents: boolean;
+  sso: boolean;
+}
+export interface OrganizationTeam {
+  name: string;
+  usersCount: number;
+  visibility: string;
+  permissions: {
+    canUpdateMembership: boolean;
+    canDestroy: boolean;
+    canUpdateOrganizationAccess: boolean;
+    canUpdateApiToken: boolean;
+    canUpdateVisibility: boolean;
+  };
+  organizationAccess?: {
+    managePolicies: boolean;
+    managePolicyOverrides: boolean;
+    manageWorkspaces: boolean;
+    manageVcsSettings: boolean;
+  };
+}

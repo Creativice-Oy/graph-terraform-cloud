@@ -2,10 +2,19 @@ import {
   createIntegrationEntity,
   parseTimePropertyValue,
 } from '@jupiterone/integration-sdk-core';
-import { Organization, OrganizationWorkspace } from '../../tfe/types';
+import {
+  EntitlementSet,
+  Organization,
+  OrganizationTeam,
+  OrganizationWorkspace,
+} from '../../tfe/types';
 import { User } from '../../tfe/types';
 import { prefixObjProperties } from '../../util/properties';
 import { Entities } from '../constants';
+
+export function generateEntitlementSetKey(organizationName: string): string {
+  return `entitlement-set-${organizationName}`;
+}
 
 export function createOrganizationEntity(data: Organization) {
   return createIntegrationEntity({
@@ -120,6 +129,66 @@ export function createOrganizationWorkspaceEntity(
         webLink: `https://app.terraform.io/app/${data.name}/workspaces`,
         ...(data.permissions &&
           prefixObjProperties('permissions', data.permissions)),
+      },
+    },
+  });
+}
+
+export function createOrganizationTeamEntity(
+  teamId: string,
+  data: OrganizationTeam,
+) {
+  return createIntegrationEntity({
+    entityData: {
+      source: data,
+      assign: {
+        _key: teamId,
+        _class: Entities.TEAM._class,
+        _type: Entities.TEAM._type,
+        name: data.name,
+        usersCount: data.usersCount,
+        visibility: data.visibility,
+        organizationAccessManagePolicies:
+          data.organizationAccess?.managePolicies,
+        organizationAccessManagePolicyOverrides:
+          data.organizationAccess?.managePolicyOverrides,
+        organizationAccessManageWorkspaces:
+          data.organizationAccess?.manageWorkspaces,
+        organizationAccessManageVcsSettigs:
+          data.organizationAccess?.manageVcsSettings,
+        ...(data.permissions &&
+          prefixObjProperties('permissions', data.permissions)),
+      },
+    },
+  });
+}
+
+export function createOrganizationEntitlementSetEntity(
+  organizationId: string,
+  data: EntitlementSet,
+) {
+  return createIntegrationEntity({
+    entityData: {
+      source: data,
+      assign: {
+        _key: generateEntitlementSetKey(organizationId),
+        _class: Entities.ENTITLEMENT_SET._class,
+        _type: Entities.ENTITLEMENT_SET._type,
+        name: generateEntitlementSetKey(organizationId),
+        costEstimation: data.costEstimation,
+        configurationDesigner: data.configurationDesigner,
+        operations: data.operations,
+        privateModuleRegistry: data.privateModuleRegistry,
+        sentinel: data.sentinel,
+        stateStorage: data.stateStorage,
+        teams: data.teams,
+        vcsIntegrations: data.vcsIntegrations,
+        usageReporting: data.usageReporting,
+        userLimit: data.userLimit,
+        selfServeBilling: data.selfServeBilling,
+        auditLogging: data.auditLogging,
+        agents: data.agents,
+        sso: data.sso,
       },
     },
   });
