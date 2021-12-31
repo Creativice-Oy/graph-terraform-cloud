@@ -12,6 +12,7 @@ import { RelationshipClass } from '@jupiterone/data-model';
 import { cacheOrganizationData } from '../../util/jobState';
 import { createMockStepExecutionContext } from '@jupiterone/integration-sdk-testing';
 import { IntegrationConfig } from '../../config';
+import { fetchAccount } from '../account';
 
 describe('#fetchOrganizations', () => {
   test('should collect data', async () => {
@@ -19,7 +20,7 @@ describe('#fetchOrganizations', () => {
       recordingName: 'fetchOrganizations',
       recordingDirectory: __dirname,
       integrationConfig,
-      stepFunctions: [fetchOrganizations],
+      stepFunctions: [fetchAccount, fetchOrganizations],
       entitySchemaMatchers: [
         {
           _type: Entities.ORGANIZATION._type,
@@ -73,7 +74,19 @@ describe('#fetchOrganizations', () => {
           },
         },
       ],
-      relationshipSchemaMatchers: [],
+      relationshipSchemaMatchers: [
+        {
+          _type: Relationships.ACCOUNT_HAS_ORGANIZATION._type,
+          matcher: {
+            schema: {
+              properties: {
+                _class: { const: RelationshipClass.HAS },
+                _type: { const: 'tfe_account_has_organization' },
+              },
+            },
+          },
+        },
+      ],
     });
   });
 });

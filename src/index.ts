@@ -6,6 +6,7 @@ import {
 } from './config';
 import { organizationSteps } from './steps/organization';
 import { workspaceSteps } from './steps/workspace';
+import { accountSteps } from './steps/account';
 import getStepStartStates from './getStepStartStates';
 
 export const invocationConfig: IntegrationInvocationConfig<IntegrationConfig> =
@@ -13,5 +14,9 @@ export const invocationConfig: IntegrationInvocationConfig<IntegrationConfig> =
     instanceConfigFields,
     validateInvocation,
     getStepStartStates,
-    integrationSteps: [...organizationSteps, ...workspaceSteps],
+    integrationSteps: [
+      ...organizationSteps,
+      ...workspaceSteps,
+      ...accountSteps,
+    ],
   };

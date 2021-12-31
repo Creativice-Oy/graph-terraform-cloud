@@ -10,6 +10,7 @@ export const MAC_OS_CONFIGURATION_DETAILS_BY_ID_KEY =
   'MAC_OS_CONFIGURATION_DETAILS_BY_ID';
 
 export enum IntegrationSteps {
+  ACCOUNT = 'fetch-account',
   ORGANIZATIONS = 'fetch-organizations',
   ORGANIZATION_ENTITLEMENT_SET = 'fetch-organization-entitlement-set',
   ORGANIZATION_MEMBERS = 'fetch-organization-members',
@@ -20,6 +21,7 @@ export enum IntegrationSteps {
 }
 
 export const Entities: Record<
+  | 'ACCOUNT'
   | 'ENTITLEMENT_SET'
   | 'ORGANIZATION'
   | 'TEAM'
@@ -28,6 +30,11 @@ export const Entities: Record<
   | 'WORKSPACE_RESOURCE',
   StepEntityMetadata
 > = {
+  ACCOUNT: {
+    _type: 'tfe_account',
+    _class: ['User'],
+    resourceName: 'Account',
+  },
   ENTITLEMENT_SET: {
     _type: 'tfe_entitlement_set',
     _class: ['Entity'],
@@ -61,6 +68,7 @@ export const Entities: Record<
 };
 
 export const Relationships: Record<
+  | 'ACCOUNT_HAS_ORGANIZATION'
   | 'ORGANIZATION_HAS_ENTITLEMENT_SET'
   | 'ORGANIZATION_HAS_TEAM'
   | 'ORGANIZATION_HAS_USER'
@@ -68,6 +76,12 @@ export const Relationships: Record<
   | 'WORKSPACE_HAS_RESOURCE',
   StepRelationshipMetadata
 > = {
+  ACCOUNT_HAS_ORGANIZATION: {
+    _type: 'tfe_account_has_organization',
+    _class: RelationshipClass.HAS,
+    sourceType: Entities.ACCOUNT._type,
+    targetType: Entities.ORGANIZATION._type,
+  },
   ORGANIZATION_HAS_ENTITLEMENT_SET: {
     _type: 'tfe_organization_has_entitlement_set',
     _class: RelationshipClass.HAS,

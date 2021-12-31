@@ -130,6 +130,7 @@ export interface CreateOrganizationRequestBodyAttributes {
 }
 
 export interface User {
+  id: string;
   username: string;
   isServiceAccount: boolean;
   avatarUrl: string;

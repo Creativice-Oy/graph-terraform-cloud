@@ -44,6 +44,9 @@ export default async function getStepStartStates(
   });
 
   const stepStartStates: StepStartStates = {
+    [IntegrationSteps.ACCOUNT]: {
+      disabled: false,
+    },
     [IntegrationSteps.ORGANIZATIONS]: {
       disabled: false,
     },

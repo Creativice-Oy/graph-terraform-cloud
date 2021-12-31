@@ -7,7 +7,12 @@ import {
 } from '@jupiterone/integration-sdk-core';
 import { TerraformCloudClient } from '../../tfe/client';
 import { IntegrationConfig } from '../../config';
-import { Entities, IntegrationSteps, Relationships } from '../constants';
+import {
+  ACCOUNT_ENTITY_KEY,
+  Entities,
+  IntegrationSteps,
+  Relationships,
+} from '../constants';
 import {
   createOrganizationEntitlementSetEntity,
   createOrganizationEntity,
@@ -33,11 +38,22 @@ export async function fetchOrganizations({
   const organizationData: CachedOrganizationData[] = [];
 
   await client.organizations.iterateOrganizations(async ({ item }) => {
-    await jobState.addEntity(createOrganizationEntity(item.attributes));
+    const organizationEntity = createOrganizationEntity(item.attributes);
+    await jobState.addEntity(organizationEntity);
     organizationData.push({
       organizationName: item.attributes.name,
       organizationExternalId: item.attributes.externalId,
     });
+
+    const accountEntity = await jobState.getData(ACCOUNT_ENTITY_KEY);
+
+    await jobState.addRelationship(
+      createDirectRelationship({
+        _class: RelationshipClass.HAS,
+        to: organizationEntity,
+        from: accountEntity as Entity,
+      }),
+    );
   });
 
   await cacheOrganizationData(jobState, organizationData);
@@ -245,8 +261,8 @@ export const organizationSteps: IntegrationStep<IntegrationConfig>[] = [
     id: IntegrationSteps.ORGANIZATIONS,
     name: 'Fetch Organization Details',
     entities: [Entities.ORGANIZATION],
-    relationships: [],
-    dependsOn: [],
+    relationships: [Relationships.ACCOUNT_HAS_ORGANIZATION],
+    dependsOn: [IntegrationSteps.ACCOUNT],
     executionHandler: fetchOrganizations,
   },
   {
